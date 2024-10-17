@@ -1,0 +1,16 @@
+FROM alpine:latest
+
+ENV GIT_REPO=""
+ENV GIT_USER=""
+ENV GIT_TOKEN=""
+
+RUN apk update && \
+    apk add --no-cache git jq curl neovim
+
+RUN mkdir -p /root/project
+
+RUN curl -s https://raw.githubusercontent.com/heaveless/shell/master/container/init | sh
+
+WORKDIR /root/project
+
+CMD ["nvim"]
