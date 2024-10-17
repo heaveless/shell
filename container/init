@@ -14,15 +14,15 @@ elif echo "$GIT_REPO" | grep -q "gitlab.com"; then
 	GIT_NAME=$(curl -s "https://$GIT_PROVIDER/api/v4/users?username=$GIT_USER" | jq ".[0]" | jq -r ".name")
 fi
 
-sed \
--i "s/{{GIT_USER}}/$GIT_USER/g" \
--i "s/{{GIT_NAME}}/$GIT_NAME/g" \
+sed -i \
+-e "s/{{GIT_USER}}/$GIT_USER/g" \
+-e "s/{{GIT_NAME}}/$GIT_NAME/g" \
 "$CONFIGPATH/git/config"
 
-sed \
--i "s/{{GIT_USER}}/$GIT_USER/g" \
--i "s/{{GIT_TOKEN}}/$GIT_TOKEN/g" \
--i "s/{{GIT_PROVIDER}}/$GIT_PROVIDER/g" \
+sed -i \
+-e "s/{{GIT_USER}}/$GIT_USER/g" \
+-e "s/{{GIT_TOKEN}}/$GIT_TOKEN/g" \
+-e "s/{{GIT_PROVIDER}}/$GIT_PROVIDER/g" \
 "$CONFIGPATH/git/credentials"
 
 git clone $GIT_REPO /root/project
