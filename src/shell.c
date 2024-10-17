@@ -96,27 +96,6 @@ char** split_line(char* line) {
 	return tokens;
 }
 
-int launch(char** args) {
-	pid_t pid;
-	int status;
-
-	pid = fork();
-	if (pid == 0) {
-		if (execvp(args[0], args) == -1) {
-			perror("shell");
-		}
-		exit(EXIT_FAILURE);
-	} else if (pid < 0) {
-		perror("shell");
-	} else {
-		do {
-			waitpid(pid, &status, WUNTRACED);
-		} while (!WIFEXITED(status) && !WIFSIGNALED(status));
-	}
-
-	return 1;
-}
-
 int execute(char** args) {
 	int i;
 
@@ -124,15 +103,13 @@ int execute(char** args) {
 		return 1;
 	}
 
-	printf(*args);
-
 	for (i = 0; i < num_builtins(); i++) {
 		if (strcmp(args[0], builtin_str[i]) == 0) {
 			return (*builtin_func[i])(args);
 		}
 	}
 
-	return 1;//launch(args);
+	return 1;
 }
 
 void loop(void) {
@@ -148,6 +125,7 @@ void loop(void) {
 		status = execute(args);
 
 		free(line);
+		free(args);
 	} while(status);
 }
 
