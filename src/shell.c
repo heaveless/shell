@@ -124,13 +124,15 @@ int execute(char** args) {
 		return 1;
 	}
 
+	printf(*args);
+
 	for (i = 0; i < num_builtins(); i++) {
 		if (strcmp(args[0], builtin_str[i]) == 0) {
 			return (*builtin_func[i])(args);
 		}
 	}
 
-	return launch(args);
+	return 1;//launch(args);
 }
 
 void loop(void) {
@@ -139,7 +141,7 @@ void loop(void) {
 	int status;
 
 	do {
-		printf("> ");
+		printf("$ ");
 		
 		line = read_line();
 		args = split_line(line);
