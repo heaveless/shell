@@ -1,0 +1,5 @@
+[user]
+	email = {{GIT_USER}}
+	name = {{GIT_NAME}}
+[credential]
+	helper = store

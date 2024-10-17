@@ -1,0 +1,28 @@
+CONFIGPATH="/root/.config"
+
+git clone https://github.com/heaveless/shell.git
+
+cp -r shell/container/config $CONFIGPATH
+
+if echo "$GIT_REPO" | grep -q "github.com"; then
+	GIT_PROVIDER="github.com"
+	# GIT_FULLNAME=$(curl -s "https://api.$GIT_PROVIDER/users/$GIT_USER" | jq -r ".name")
+	GIT_NAME=$GIT_USER
+
+elif echo "$GIT_REPO" | grep -q "gitlab.com"; then
+	GIT_PROVIDER="gitlab.com"
+	GIT_NAME=$(curl -s "https://$GIT_PROVIDER/api/v4/users?username=$GIT_USER" | jq ".[0]" | jq -r ".name")
+fi
+
+sed \
+-i "s/{{GIT_USER}}/$GIT_USER/g" \
+-i "s/{{GIT_NAME}}/$GIT_NAME/g" \
+"$CONFIGPATH/git/config"
+
+sed \
+-i "s/{{GIT_USER}}/$GIT_USER/g" \
+-i "s/{{GIT_TOKEN}}/$GIT_TOKEN/g" \
+-i "s/{{GIT_PROVIDER}}/$GIT_PROVIDER/g" \
+"$CONFIGPATH/git/credentials"
+
+git clone $GIT_REPO /root/project
